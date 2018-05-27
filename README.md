@@ -2,7 +2,7 @@
 
 This is a Spring Cloud Task that leverages the powerful parallel bulk file loading features from Greenplum Database.  Why circle the earth looking for ways to piece together things like Kafka, Cassandra, MongoDB, Spark, etc when you can simply use PCF for processing and GPDB for bulk operations?  Not to mention the super simple development model provide by Spring!
 
-Results: Using a single node GPDB vm instance, you can bulk load 1,051,080 rows in 40s where batch processes are run as CF tasks via Spring Cloud Dataflow wihtout spending any money on super mega infrastracture ;-).  Tests were performed using a vsphere env with 2 very old Dell R900 hosts, 1 Gig network, Greenplum DB + Pivotal Cloud Foundry all deployed on the same infra.  Wonder if we can improve that 40s?... hmmm.  From here you can do further data manipulation or even split the rows into individual events feeding into Streams.
+Results: Using a single node GPDB vm instance, you can bulk load 1,051,080 records from GZipped file in 40s where batch processes are run as CF tasks via Spring Cloud Dataflow without spending any money on monster infrastracture ;-).  Tests were performed using a vsphere env with 2 very old Dell R900 hosts, 1 Gig network, Greenplum DB + Pivotal Cloud Foundry Small Footprint all deployed on the same infra.  Wonder if we can improve that 40s?... hmmm.  From here you can do further data manipulation or even split the rows into individual events feeding into Streams.
 
 In order to use this Task application with Spring Cloud Dataflow on PCF, you will need:
 
