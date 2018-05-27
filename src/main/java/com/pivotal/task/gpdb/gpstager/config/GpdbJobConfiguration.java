@@ -1,7 +1,5 @@
 package com.pivotal.task.gpdb.gpstager.config;
 
-import java.text.SimpleDateFormat;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.core.Job;
@@ -17,7 +15,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.task.configuration.EnableTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.pivotal.task.gpdb.database.GreenplumDatabase;
 
 @EnableTask
 @EnableBatchProcessing
@@ -36,7 +34,7 @@ public class GpdbJobConfiguration {
 	private GpstagerTaskBatchProperties config;
 	
 	@Autowired
-	private JdbcTemplate gpdb;
+	private GreenplumDatabase greenplum;
 
 	@Bean
 	public Job job1() {
@@ -46,7 +44,7 @@ public class GpdbJobConfiguration {
 							@Override
 							public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 									throws Exception {
-								gpdb.execute(generateExtDDL());
+								greenplum.executeUpdate(generateExtDDL());
 								return RepeatStatus.FINISHED;
 							}
 						})
@@ -62,7 +60,7 @@ public class GpdbJobConfiguration {
 							@Override
 							public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 									throws Exception {
-								gpdb.execute(generateLoadDML());
+								greenplum.executeUpdate(generateLoadDML());
 								return RepeatStatus.FINISHED;
 							}
 						})
@@ -85,10 +83,16 @@ public class GpdbJobConfiguration {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		for (String attr: config.getAttrList()) {
-			sb.append(attr + "TEXT, ");
+		for (int i=0;i<config.getAttrList().length-1;i++) {
+			sb.append(config.getAttrList()[i] + " TEXT, ");
 		}
+		sb.append(config.getAttrList()[config.getAttrList().length-1] + " TEXT) ");
+		
 		ddl += sb.toString();
+		ddl += " LOCATION ('gpfdist://" + config.getGpfDistServerList()[0] + config.getRelativeFilePaths()[0] + 
+				"') FORMAT '" + config.getFileFormat() + "' (DELIMITER '"+config.getDelimiter()+
+				"' NULL '"+config.getNullValue()+"') "+
+				config.getLogErrorClause();
 		logger.info("Generated external table ddl: " + ddl);
 		return ddl;
 	}

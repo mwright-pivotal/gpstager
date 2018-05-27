@@ -1,8 +1,5 @@
 package com.pivotal.task.gpdb.gpstager.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.Assert;
 
@@ -41,22 +38,22 @@ public class GpstagerTaskBatchProperties {
 		this.gpdbPassword = gpdbPassword;
 	}
 	private String extTableName;
-	private List<String> gpfDistServerList = new ArrayList<String>();
+	private String[] gpfDistServerList = new String[] {};
 	private Boolean secureProtocol = false;
-	private List<String> relativeFilePaths = new ArrayList<String>();
+	private String[] relativeFilePaths = new String[] {};
 	
 	public String getExtTableName() {
-		Assert.hasText(extTableName, "format must not be empty nor null");
+		Assert.hasText(extTableName, "external table name must not be empty nor null");
 		return extTableName;
 	}
 	public void setExtTableName(String extTableName) {
 		this.extTableName = extTableName;
 	}
-	public List<String> getGpfDistServerList() {
+	public String[] getGpfDistServerList() {
 		Assert.notEmpty(gpfDistServerList,"Must provide at least one gpfdist server");
 		return gpfDistServerList;
 	}
-	public void setGpfDistServerList(ArrayList<String> gpfDistServerList) {
+	public void setGpfDistServerList(String[] gpfDistServerList) {
 		this.gpfDistServerList = gpfDistServerList;
 	}
 	public Boolean getSecureProtocol() {
@@ -65,18 +62,18 @@ public class GpstagerTaskBatchProperties {
 	public void setSecureProtocol(Boolean secureProtocol) {
 		this.secureProtocol = secureProtocol;
 	}
-	public List<String> getRelativeFilePaths() {
+	public String[] getRelativeFilePaths() {
 		Assert.notEmpty(relativeFilePaths,"Must specify at least one file path");
 		return relativeFilePaths;
 	}
-	public void setRelativeFilePaths(ArrayList<String> relativeFilePaths) {
+	public void setRelativeFilePaths(String[] relativeFilePaths) {
 		this.relativeFilePaths = relativeFilePaths;
 	}
-	public List<String> getAttrList() {
+	public String[] getAttrList() {
 		Assert.notEmpty(attrList,"Must specify at least one column attribute");
 		return attrList;
 	}
-	public void setAttrList(ArrayList<String> attrList) {
+	public void setAttrList(String[] attrList) {
 		this.attrList = attrList;
 	}
 	public String getFileFormat() {
@@ -109,7 +106,7 @@ public class GpstagerTaskBatchProperties {
 	public void setDimTableName(String dimTableName) {
 		this.dimTableName = dimTableName;
 	}
-	private List<String> attrList = new ArrayList<String>();
+	private String[] attrList = new String[] {};
 	private String fileFormat = "TEXT";
 	private String delimiter = "|";
 	private String nullValue = " ";
