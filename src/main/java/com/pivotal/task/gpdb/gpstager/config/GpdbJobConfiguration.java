@@ -44,6 +44,7 @@ public class GpdbJobConfiguration {
 							@Override
 							public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 									throws Exception {
+								greenplum.executeUpdate("DROP EXTERNAL TABLE IF EXISTS " + config.getExtTableName());
 								greenplum.executeUpdate(generateExtDDL());
 								return RepeatStatus.FINISHED;
 							}
@@ -60,6 +61,7 @@ public class GpdbJobConfiguration {
 							@Override
 							public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 									throws Exception {
+								greenplum.executeUpdate("DROP TABLE IF EXISTS " + config.getExtTableName());
 								greenplum.executeUpdate(generateLoadDML());
 								return RepeatStatus.FINISHED;
 							}

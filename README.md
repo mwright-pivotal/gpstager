@@ -24,10 +24,10 @@ Once your test env is setup properly:
 2. ./mvnw clean package -DskipTests=true (todo: implement tests)
 3. Publish the jarfile artifact.  SCDF supports registering Stream and Task applications from maven repository or via http resource.  If you don't have a maven repo you can use PCF to host your jarfile and access via http.  To do so:
 
-    mkdir gpstager-artifact; cd gpstager-artifact
-    cp ../target/gpstager-0.0.1-SNAPSHOT.jar .
-    cf push gpstager-jar -b staticfile_buildpack -p .
-    Note the URL.  Example: https://gpstager-jar.cf.wrightcode.net/gpstager-0.0.1-SNAPSHOT.jar
+    * mkdir gpstager-artifact; cd gpstager-artifact
+    * cp ../target/gpstager-0.0.1-SNAPSHOT.jar .
+    * cf push gpstager-jar -b staticfile_buildpack -p .  
+        Note the URL.  Example: https://gpstager-jar.cf.wrightcode.net/gpstager-0.0.1-SNAPSHOT.jar
 
 4. cf login
 5. cf create-service p-dataflow  standard df-server
