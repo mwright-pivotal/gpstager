@@ -7,6 +7,7 @@ import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -38,7 +39,7 @@ public class GpdbJobConfiguration {
 
 	@Bean
 	public Job job1() {
-		return jobBuilderFactory.get("generateExternalTable")
+		return jobBuilderFactory.get("generateExternalTable").incrementer(new RunIdIncrementer())
 				.start(stepBuilderFactory.get("job1step1")
 						.tasklet(new Tasklet() {
 							@Override
@@ -55,13 +56,13 @@ public class GpdbJobConfiguration {
 
 	@Bean
 	public Job job2() {
-		return jobBuilderFactory.get("loadIntoStagingTable")
+		return jobBuilderFactory.get("loadIntoStagingTable").incrementer(new RunIdIncrementer())
 				.start(stepBuilderFactory.get("job2step1")
 						.tasklet(new Tasklet() {
 							@Override
 							public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
 									throws Exception {
-								greenplum.executeUpdate("DROP TABLE IF EXISTS " + config.getExtTableName());
+								greenplum.executeUpdate("DROP TABLE IF EXISTS " + config.getDimTableName());
 								greenplum.executeUpdate(generateLoadDML());
 								return RepeatStatus.FINISHED;
 							}
