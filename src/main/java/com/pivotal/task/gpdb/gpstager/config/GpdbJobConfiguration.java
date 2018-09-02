@@ -12,6 +12,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.task.configuration.EnableTask;
 import org.springframework.context.annotation.Bean;
@@ -91,8 +92,14 @@ public class GpdbJobConfiguration {
 		}
 		sb.append(config.getAttrList()[config.getAttrList().length-1] + " TEXT) ");
 		
+		String proto;
+		if (config.getSecureProtocol())
+			proto = "gpfdists";
+		else
+			proto = "gpfdist";
+		
 		ddl += sb.toString();
-		ddl += " LOCATION ('gpfdist://" + config.getGpfDistServerList()[0] + config.getRelativeFilePaths()[0] + 
+		ddl += " LOCATION ('" + proto + "://" + config.getGpfDistServerList()[0] + config.getRelativeFilePaths()[0] + 
 				"') FORMAT '" + config.getFileFormat() + "' (DELIMITER '"+config.getDelimiter()+
 				"' NULL '"+config.getNullValue()+"') "+
 				config.getLogErrorClause();
